@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import sourceData from '@/assets/data.json'
 import NotFound from '@/views/NotFound.vue'
 import HomePage from '@/views/HomePage.vue'
+import ForumPage from '@/views/ForumPage.vue'
 import ThreadShow from '@/views/ThreadShow.vue'
 
 const beforeEnterThread = (to, from, next) => {
@@ -21,7 +22,13 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: HomePage
+    component: HomePage,
+  },
+  {
+    path: '/forum/:id',
+    name: 'Forum',
+    component: ForumPage,
+    props: true
   },
   {
     path: '/thread/:id',
