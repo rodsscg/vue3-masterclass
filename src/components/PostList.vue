@@ -36,9 +36,10 @@
         ><i class="fa fa-pencil" /></a>
       </div>
 
-      <div class="post-date text-faded">
-        {{ post.publishedAt }}
-      </div>
+      <base-date
+        :timestamp="post.publishedAt"
+        class="post-date text-faded"
+      />
     </div>
   </div>
 </template>
@@ -47,6 +48,7 @@
 import { defineProps, reactive } from 'vue'
 
 import sourceData from '@/assets/data.json'
+import BaseDate from '@/components/BaseDate.vue'
 
 defineProps({
   posts: { type: Array, required: true}

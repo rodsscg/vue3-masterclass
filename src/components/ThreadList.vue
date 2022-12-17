@@ -17,7 +17,8 @@
             </router-link>
           </p>
           <p class="text-faded text-xsmall">
-            By <a href="#">{{ userById(thread.userId).name }}</a>, {{ thread.publishedAt }}.
+            By <a href="#">{{ userById(thread.userId).name }}</a>,
+            <base-date :timestamp="thread.publishedAt" />.
           </p>
         </div>
 
@@ -36,9 +37,10 @@
             <p class="text-xsmall">
               <a href="#">{{ userById(thread.userId).name }}</a>
             </p>
-            <p class="text-xsmall text-faded">
-              {{ thread.publishedAt }}
-            </p>
+            <base-date
+              :timestamp="thread.publishedAt"
+              class="text-xsmall text-faded"
+            />
           </div>
         </div>
       </div>
@@ -48,7 +50,9 @@
 
 <script setup>
 import { defineProps, reactive } from 'vue'
+
 import sourceData from '@/assets/data.json'
+import BaseDate from '@/components/BaseDate.vue';
 
 defineProps({
   threads: { type: Array, required: true}
