@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import sourceData from '@/assets/data.json'
-import NotFound from '@/components/NotFound.vue'
-import HomePage from '@/components/HomePage.vue'
-import ThreadShow from '@/components/ThreadShow.vue'
+import NotFound from '@/views/NotFound.vue'
+import HomePage from '@/views/HomePage.vue'
+import ThreadShow from '@/views/ThreadShow.vue'
 
 const beforeEnterThread = (to, from, next) => {
   const threadExists = sourceData.threads.find(thread => thread.id === to.params.id)
@@ -12,9 +12,7 @@ const beforeEnterThread = (to, from, next) => {
   next(threadExists ? null : {
     name: 'NotFound',
     params: {
-      pathMatch: to.path.substring(1).split('/'),
-      query: to.query,
-      hash: to.hash
+      pathMatch: to.path.substring(1).split('/')
     }
   })
 }
