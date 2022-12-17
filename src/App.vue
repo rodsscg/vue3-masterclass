@@ -4,18 +4,13 @@
     src="./assets/logo.png"
   >
   <div class="container">
-    <home-page />
+    <router-view />
   </div>
 </template>
 
 <script>
-import HomePage from './components/HomePage.vue'
-
 export default {
   name: 'App',
-  components: {
-    HomePage
-  }
 }
 </script>
 
