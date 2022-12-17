@@ -26,7 +26,7 @@
 
       <div class="post-content">
         <div>
-          <p>{{ postById(post.id).text }}</p>
+          <p>{{ post.text }}</p>
         </div>
         <a
           href="#"
@@ -37,7 +37,7 @@
       </div>
 
       <div class="post-date text-faded">
-        {{ postById(post.id).publishedAt }}
+        {{ post.publishedAt }}
       </div>
     </div>
   </div>
@@ -53,9 +53,7 @@ defineProps({
 })
 
 const users = reactive(sourceData.users)
-const posts = reactive(sourceData.posts)
 
-const postById = (postId) => posts.find(p => p.id === postId)
 const userById = (userId) => users.find(u => u.id === userId)
 </script>
 
