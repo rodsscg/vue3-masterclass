@@ -2,45 +2,11 @@
   <div class="container">
     <div class="flex-grid">
       <div class="col-3 push-top">
-        <div class="profile-card">
-          <p class="text-center">
-            <img
-              :src="user.avatar"
-              alt="`${user.name} profile picture`}`"
-              class="avatar-xlarge"
-            >
-          </p>
-
-          <h1 class="title">
-            {{ user.username }}
-          </h1>
-
-          <p class="text-lead">
-            {{ user.name }}
-          </p>
-
-          <p class="text-justify">
-            {{ user.bio || 'No bio specified' }}
-          </p>
-
-          <span class="online">{{ user.username }} is online</span>
-
-
-          <div class="stats">
-            <span>{{ userPostsCount }} posts</span>
-            <span>{{ userThreadsCount }} threads</span>
-          </div>
-
-          <hr>
-
-          <p
-            v-if="user.website"
-            class="text-large text-center"
-          >
-            <i class="fa fa-globe" />
-            <a :href="user.website">{{ user.website }}</a>
-          </p>
-        </div>
+        <profile-card
+          :user="user"
+          :posts-count="posts.length"
+          :threads-count="threads.length"
+        />
 
         <p class="text-xsmall text-faded text-center">
           Member since june 2003, last visited 4 hours ago
@@ -66,7 +32,7 @@
         <hr>
 
         <post-list
-          :posts="userPosts"
+          :posts="posts"
           :users="users"
         />
       </div>
@@ -79,15 +45,14 @@ import { computed } from 'vue'
 import { useStore } from 'vuex'
 
 import PostList from '@/components/PostList.vue'
+import ProfileCard from '@/components/ProfileCard.vue'
 
 const store = useStore()
 
 const user = computed(() => store.getters.authUser)
 const users = computed(() => store.state.users)
-const userPosts = computed(() => store.state.posts.filter(p => p.userId === user.value.id))
-const userPostsCount = computed(() => userPosts.value.length)
-const userThreads = computed(() => store.state.threads.filter(t => t.userId === user.value.id))
-const userThreadsCount = computed(() => userThreads.value.length)
+const posts = computed(() => user.value.posts)
+const threads = computed(() => user.value.threads)
 </script>
 
 <style scoped>
