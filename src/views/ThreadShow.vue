@@ -31,8 +31,6 @@ const users = computed(() => store.state.users)
 
 const onSavePost = (eventData) => {
   const post = { ...eventData.post, threadId: props.id}
-  
-  posts.value.push(post)
-  thread.value.posts.push(post.id)
+  store.dispatch('createPost', post)
 }
 </script>
