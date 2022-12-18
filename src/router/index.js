@@ -4,6 +4,7 @@ import store from '@/store'
 import NotFound from '@/views/NotFound.vue'
 import HomePage from '@/views/HomePage.vue'
 import ForumPage from '@/views/ForumPage.vue'
+import ProfileView from '@/views/ProfileView.vue'
 import ThreadShow from '@/views/ThreadShow.vue'
 
 const beforeEnterThread = (to, from, next) => {
@@ -29,6 +30,11 @@ const routes = [
     name: 'Forum',
     component: ForumPage,
     props: true
+  },
+  {
+    path: '/me',
+    name: 'Profile',
+    component: ProfileView
   },
   {
     path: '/thread/:id',
