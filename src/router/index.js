@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import sourceData from '@/assets/data.json'
+import store from '@/store'
 import NotFound from '@/views/NotFound.vue'
 import HomePage from '@/views/HomePage.vue'
 import ForumPage from '@/views/ForumPage.vue'
 import ThreadShow from '@/views/ThreadShow.vue'
 
 const beforeEnterThread = (to, from, next) => {
-  const threadExists = sourceData.threads.find(thread => thread.id === to.params.id)
+  const threadExists = store.state.threads.find(thread => thread.id === to.params.id)
 
   // The pathMatch is used to maintain the incorrect URL passed by the user
   next(threadExists ? null : {

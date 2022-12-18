@@ -7,11 +7,13 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 
-import sourceData from '@/assets/data.json'
 import CategoryList from '@/components/CategoryList.vue'
 
-const categories = reactive(sourceData.categories)
-const forums = reactive(sourceData.forums)
+const store = useStore()
+
+const categories = computed(() => store.state.categories)
+const forums = computed(() => store.state.forums)
 </script>

@@ -15,23 +15,26 @@
   </div>
 
   <div class="col-full push-top"> 
-    <thread-list :threads="threads" />
+    <thread-list
+      :threads="threads"
+      :users="users"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed, defineProps, reactive } from 'vue';
+import { computed, defineProps } from 'vue'
+import { useStore } from 'vuex'
 
-import sourceData from '@/assets/data.json';
-import ThreadList from '@/components/ThreadList.vue';
+import ThreadList from '@/components/ThreadList.vue'
+
+const store = useStore()
 
 const props = defineProps({
   id: { type: String, required: true }
 })
 
-const forums = reactive(sourceData.forums);
-const allThreads = reactive(sourceData.threads);
-
-const forum = computed(() => forums.find(f => f.id === props.id));
-const threads = computed(() => allThreads.filter(t => t.forumId === props.id));
+const forum = computed(() => store.state.forums.find(f => f.id === props.id))
+const threads = computed(() => store.state.threads.filter(t => t.forumId === props.id))
+const users = computed(() => store.state.users)
 </script>

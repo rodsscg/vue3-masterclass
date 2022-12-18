@@ -45,18 +45,16 @@
 </template>
 
 <script setup>
-import { defineProps, reactive } from 'vue'
+import { defineProps } from 'vue'
 
-import sourceData from '@/assets/data.json'
 import BaseDate from '@/components/BaseDate.vue'
 
-defineProps({
-  posts: { type: Array, required: true}
+const props = defineProps({
+  posts: { type: Array, required: true},
+  users: { type: Array, required: true}
 })
 
-const users = reactive(sourceData.users)
-
-const userById = (userId) => users.find(u => u.id === userId)
+const userById = (userId) => props.users.find(u => u.id === userId)
 </script>
 
 <style scoped>
