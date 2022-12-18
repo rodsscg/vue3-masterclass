@@ -1,13 +1,12 @@
 <template>
-  <div class="container">
+  <the-navbar />
+  <div class="container push-top">
     <router-view />
   </div>
 </template>
 
-<script>
-export default {
-  name: 'App',
-}
+<script setup>
+import TheNavbar from './components/TheNavbar.vue';
 </script>
 
 <style>
