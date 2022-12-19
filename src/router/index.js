@@ -34,7 +34,13 @@ const routes = [
   {
     path: '/me',
     name: 'Profile',
-    component: ProfileView
+    component: ProfileView,
+  },
+  {
+    path: '/edit',
+    name: 'ProfileEdit',
+    component: ProfileView,
+    props: { isEditing: true }
   },
   {
     path: '/thread/:id',

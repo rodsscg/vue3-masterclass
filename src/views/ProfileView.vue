@@ -2,30 +2,21 @@
   <div class="container">
     <div class="flex-grid">
       <div class="col-3 push-top">
-        <profile-card
-          :user="user"
-          :posts-count="posts.length"
-          :threads-count="threads.length"
-        />
-
         <profile-edit
+          v-if="isEditing"
           :user="user"
           :posts-count="posts.length"
           :threads-count="threads.length"
+          @cancel-edit="cancelEdit"
           @save-user="saveUser"
         />
 
-        <p class="text-xsmall text-faded text-center">
-          Member since june 2003, last visited 4 hours ago
-        </p>
-
-        <div class="text-center">
-          <hr>
-          <a
-            href="edit-profile.html"
-            class="btn-green btn-small"
-          >Edit Profile</a>
-        </div>
+        <profile-card
+          v-else
+          :user="user"
+          :posts-count="posts.length"
+          :threads-count="threads.length"
+        />
       </div>
 
       <div class="col-7 push-top">
@@ -48,21 +39,38 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, defineProps } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 import PostList from '@/components/PostList.vue'
 import ProfileCard from '@/components/ProfileCard.vue'
 import ProfileEdit from '@/components/ProfileEdit.vue'
 
 const store = useStore()
+const router = useRouter()
+
+defineProps({
+  isEditing: { type: Boolean, default: false }
+})
 
 const user = computed(() => store.getters.authUser)
 const users = computed(() => store.state.users)
 const posts = computed(() => user.value.posts)
 const threads = computed(() => user.value.threads)
 
-const saveUser = (payload) => store.dispatch('updateUser', payload)
+const returnToProfile = () => {
+  router.push({ name: 'Profile' })
+}
+
+const saveUser = (payload) => {
+  store.dispatch('updateUser', payload)
+  returnToProfile()
+}
+
+const cancelEdit = () => {
+  returnToProfile()
+}
 </script>
 
 <style scoped>

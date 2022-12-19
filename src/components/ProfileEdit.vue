@@ -1,6 +1,9 @@
 <template>
   <div class="profile-card">
-    <form @submit.prevent="save">
+    <form
+      @reset.prevent="onReset"
+      @submit.prevent="onSubmit"
+    >
       <p class="text-center">
         <img
           :src="user.avatar"
@@ -90,7 +93,10 @@
       </div>
 
       <div class="btn-group space-between">
-        <button class="btn-ghost">
+        <button
+          type="reset"
+          class="btn-ghost"
+        >
           Cancel
         </button>
         <button
@@ -107,7 +113,7 @@
 <script setup>
 import { defineEmits, defineProps } from 'vue'
 
-const emit = defineEmits(['save-user'])
+const emit = defineEmits(['cancel-edit', 'save-user'])
 
 const props = defineProps({
   user: { type: Object, required: true },
@@ -117,7 +123,6 @@ const props = defineProps({
 
 const formData = { ...props.user }
 
-const save = () => {
-  emit('save-user', { ...formData })
-}
+const onSubmit = () => emit('save-user', { ...formData })
+const onReset = () => emit('cancel-edit')
 </script>
