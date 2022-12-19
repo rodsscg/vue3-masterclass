@@ -6,6 +6,7 @@ import HomePage from '@/views/HomePage.vue'
 import ForumPage from '@/views/ForumPage.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import ThreadCreate from '@/views/ThreadCreate.vue'
+import ThreadEdit from '@/views/ThreadEdit.vue'
 import ThreadShow from '@/views/ThreadShow.vue'
 
 const beforeEnterThread = (to, from, next) => {
@@ -58,6 +59,12 @@ const routes = [
     path: '/forum/:forumId/thread/create',
     name: 'ThreadCreate',
     component: ThreadCreate,
+    props: true
+  },
+  {
+    path: '/thread/:id/edit',
+    name: 'ThreadEdit',
+    component: ThreadEdit,
     props: true
   },
   {

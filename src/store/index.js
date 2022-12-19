@@ -52,13 +52,30 @@ export default createStore({
 
       return state.threads.find(thread => thread.id === id)
     },
+    updateThread({ commit, state }, { title, text, id }) {
+      const originalThread = state.threads.find(thread => thread.id === id)
+      console.log('originalThread', originalThread)
+
+      const originalPost = state.posts.find(post => post.id === originalThread.posts[0])
+      console.log('originalPost', originalPost)
+      const publishedAt = Math.floor(Date.now() / 1000)
+
+      commit('setThread', { thread: { ...originalThread, publishedAt, title } })
+      commit('setPost', { post: { ...originalPost, publishedAt, text } })
+    },
     updateUser({ commit }, user) {
       commit('setUser', { user, userId: user.id })
     }
   },
   mutations: {
     setPost(state, { post }) {
-      state.posts.push(post)
+      const index = state.posts.findIndex(p => p.id === post.id)
+
+      if (post.id && index !== -1) {
+        state.posts[index] = post
+      } else {
+        state.posts.push(post)
+      }
     },
     appendPostToThread(state, { postId, threadId }) {
       const thread = state.threads.find(thread => thread.id === threadId)
@@ -70,7 +87,13 @@ export default createStore({
       state.users[userIndex] = user
     },
     setThread(state, { thread }) {
-      state.threads.push(thread)
+      const index = state.threads.findIndex(t => t.id === thread.id)
+
+      if (thread.id && index !== -1) {
+        state.threads[index] = thread
+      } else {
+        state.threads.push(thread)
+      }
     },
     appendThreadToForum(state, { threadId, forumId }) {
       const forum = state.forums.find(forum => forum.id === forumId)

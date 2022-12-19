@@ -1,13 +1,13 @@
 <template>
   <form
     @reset.prevent="$emit('reset')"
-    @submit.prevent="$emit('submit', { title, text })"
+    @submit.prevent="$emit('submit', { title: formData.title, text: formData.text })"
   >
     <div class="form-group">
       <label for="thread_title">Title:</label>
       <input
         id="thread_title"
-        v-model="title"
+        v-model="formData.title"
         type="text"
         class="form-input"
         name="title"
@@ -18,7 +18,7 @@
       <label for="thread_content">Content:</label>
       <textarea
         id="thread_content"
-        v-model="text"
+        v-model="formData.text"
         class="form-input"
         name="content"
         rows="8"
@@ -45,10 +45,20 @@
 </template>
 
 <script setup>
-import { defineEmits } from 'vue'
+import { defineEmits, defineProps } from 'vue'
 
 defineEmits(['reset', 'submit'])
 
-let title = ''
-let text = ''
+const props = defineProps({
+  title: {
+    type: String,
+    default: '',
+  },
+  text: {
+    type: String,
+    default: '',
+  }
+})
+
+const formData = { title: props.title, text: props.text }
 </script>
