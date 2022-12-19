@@ -35,6 +35,10 @@ const routes = [
     path: '/me',
     name: 'Profile',
     component: ProfileView,
+    meta: {
+      toTop: true,
+      smoothScroll: true
+    }
   },
   {
     path: '/edit',
@@ -58,5 +62,12 @@ const routes = [
 
 export default createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else if (to.meta.toTop) {
+      return { top: 0, behavior: to.meta.smoothScroll ? 'smooth' : 'auto' }
+    }
+  }
 })

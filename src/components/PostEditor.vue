@@ -29,9 +29,7 @@ const text = ref('')
 
 const save = () => {
   const post = {
-    text: text.value,
-    publishedAt: Math.floor(Date.now() / 1000),
-    userId: 'ALXhxjwgY9PinwNGHpfai6OWyDu2'
+    text: text.value
   }
 
   emit('save-post', { post })
