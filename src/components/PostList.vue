@@ -20,7 +20,11 @@
         </a>
 
         <p class="desktop-only text-small">
-          107 posts
+          {{ userById(post.userId).postsCount }} posts
+        </p>
+
+        <p class="desktop-only text-small">
+          {{ userById(post.userId).threadsCount }} threads
         </p>
       </div>
 
@@ -46,16 +50,18 @@
 
 <script setup>
 import { defineProps } from 'vue'
+import { useStore } from 'vuex'
 
-import { findIn } from '@/helpers'
 import BaseDate from '@/components/BaseDate.vue'
 
-const props = defineProps({
+const { getters } = useStore()
+
+defineProps({
   posts: { type: Array, required: true},
   users: { type: Array, required: true}
 })
 
-const userById = (userId) => findIn(props.users).byId(userId)
+const userById = (userId) => getters.user(userId)
 </script>
 
 <style scoped>

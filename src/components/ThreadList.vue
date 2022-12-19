@@ -24,7 +24,7 @@
 
         <div class="activity">
           <p class="replies-count">
-            {{ thread.posts.length === 1 ? '1 reply' : `${thread.posts.length} replies` }}
+            {{ thread.posts.length === 1 ? '1 reply' : `${thread.repliesCount} replies` }}
           </p>
 
           <img

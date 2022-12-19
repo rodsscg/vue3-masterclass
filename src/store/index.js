@@ -15,31 +15,36 @@ export default createStore({
     authId: 'VXjpr2WHa8Ux4Bnggym8QFLdv5C3' //batman
   },
   getters: {
-    authUser(state) {
-      const user = findIn(state.users).byId(state.authId)
+    authUser(state, getters) {
+      return getters.user(state.authId)
+    },
+    user(state) {
+      return (id) => {
+        const user = findIn(state.users).byId(id)
+        if (!user) return null
 
-      if (!user) return null
-
-      return {
-        ...user,
-        get posts() {
-          return filterIn(state.posts).where('userId', user.id)
-        },
-        get postsCount() {
-          return this.posts.length
-        },
-        get threads() {
-          return filterIn(state.threads).where('userId', user.id)
-        },
-        get threadsCount() {
-          return this.threads.length
+        return {
+          ...user,
+          get posts() {
+            return filterIn(state.posts).where('userId', user.id)
+          },
+          get postsCount() {
+            return this.posts.length
+          },
+          get threads() {
+            return filterIn(state.threads).where('userId', user.id)
+          },
+          get threadsCount() {
+            return this.threads.length
+          }
         }
       }
     },
     thread(state) {
       return (id) => {
         const thread = findIn(state.threads).byId(id)
-        
+        if (!thread) return null
+
         return {
           ...thread,
           get author() {
