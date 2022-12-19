@@ -9,6 +9,24 @@
       </router-link>
     </h1>
 
+    <p>
+      By <a
+        href="#"
+        class="link-unstyled"
+      >{{ thread.author.name }}</a>, <base-date
+        :timestamp="thread.publishedAt"
+      />.
+      <span
+        style="
+        float:right;
+        margin-top:
+        2px;"
+        class="hide-mobile text-faded text-small"
+      >
+        {{ thread.repliesCount }} replies by {{ thread.contributorsCount }} contributors
+      </span>
+    </p>
+
     <post-list
       :posts="threadPosts"
       :users="users"
@@ -22,7 +40,8 @@
 import { computed, defineProps } from 'vue'
 import { useStore } from 'vuex'
 
-import { filterIn, findIn } from '@/helpers'
+import { filterIn } from '@/helpers'
+import BaseDate from '@/components/BaseDate.vue'
 import PostEditor from '@/components/PostEditor.vue'
 import PostList from '@/components/PostList.vue'
 
@@ -33,7 +52,7 @@ const props = defineProps({
 })
 
 const posts = computed(() => store.state.posts)
-const thread = computed(() => findIn(store.state.threads).byId(props.id))
+const thread = computed(() => store.getters.thread(props.id))
 const threadPosts = computed(() => filterIn(posts.value).where('threadId', props.id))
 const users = computed(() => store.state.users)
 
