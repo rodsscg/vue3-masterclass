@@ -5,6 +5,7 @@ import NotFound from '@/views/NotFound.vue'
 import HomePage from '@/views/HomePage.vue'
 import ForumPage from '@/views/ForumPage.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import ThreadCreate from '@/views/ThreadCreate.vue'
 import ThreadShow from '@/views/ThreadShow.vue'
 
 const beforeEnterThread = (to, from, next) => {
@@ -52,6 +53,12 @@ const routes = [
     component: ThreadShow,
     props: true,
     beforeEnter: beforeEnterThread
+  },
+  {
+    path: '/forum/:forumId/thread/create',
+    name: 'ThreadCreate',
+    component: ThreadCreate,
+    props: true
   },
   {
     path: '/:pathMatch(.*)*',
