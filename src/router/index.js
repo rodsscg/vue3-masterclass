@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import { findIn } from '@/helpers'
 import store from '@/store'
 import NotFound from '@/views/NotFound.vue'
 import HomePage from '@/views/HomePage.vue'
@@ -10,7 +11,7 @@ import ThreadEdit from '@/views/ThreadEdit.vue'
 import ThreadShow from '@/views/ThreadShow.vue'
 
 const beforeEnterThread = (to, from, next) => {
-  const threadExists = store.state.threads.find(thread => thread.id === to.params.id)
+  const threadExists = findIn(store.state.threads).byId(to.params.id)
 
   // The pathMatch is used to maintain the incorrect URL passed by the user
   next(threadExists ? null : {

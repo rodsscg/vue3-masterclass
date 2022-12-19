@@ -17,6 +17,7 @@
 <script setup>
 import { defineProps } from 'vue'
 
+import { filterIn } from '@/helpers'
 import ForumList from '@/components/ForumList.vue'
 
 const props = defineProps({
@@ -24,7 +25,7 @@ const props = defineProps({
   forums: { type: Array, required: true }
 })
 
-const getCategoryForums = categoryId => props.forums.filter(forum => forum.categoryId === categoryId)
+const getCategoryForums = categoryId => filterIn(props.forums).where('categoryId', categoryId)
 </script>
 
 <style scoped>

@@ -28,6 +28,7 @@
 import { computed, defineProps } from 'vue'
 import { useStore } from 'vuex'
 
+import { filterIn, findIn } from '@/helpers'
 import ThreadList from '@/components/ThreadList.vue'
 
 const store = useStore()
@@ -36,7 +37,7 @@ const props = defineProps({
   id: { type: String, required: true }
 })
 
-const forum = computed(() => store.state.forums.find(f => f.id === props.id))
-const threads = computed(() => store.state.threads.filter(t => t.forumId === props.id))
+const forum = computed(() => findIn(store.state.forums).byId(props.id))
+const threads = computed(() => filterIn(store.state.threads).where('forumId', props.id))
 const users = computed(() => store.state.users)
 </script>

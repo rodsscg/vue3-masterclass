@@ -36,9 +36,9 @@
       <button
         class="btn btn-blue"
         type="submit"
-        name="Publish"
+        :name="title ? 'Update' : 'Publish'"
       >
-        Publish
+        {{ title ? 'Update' : 'Publish' }}
       </button>
     </div>
   </form>

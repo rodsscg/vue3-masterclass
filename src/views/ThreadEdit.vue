@@ -15,6 +15,7 @@ import { computed, defineProps } from 'vue'
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 
+import { findIn } from '@/helpers'
 import ThreadEditor from '@/components/ThreadEditor.vue'
 
 const router = useRouter()
@@ -27,8 +28,8 @@ const props = defineProps({
   },
 })
 
-const thread = computed(() => state.threads.find(t => t.id === props.id))
-const text = computed(() => state.posts.find(p => p.id === thread.value.posts[0]).text)
+const thread = computed(() => findIn(state.threads).byId(props.id))
+const text = computed(() => findIn(state.posts).byId(thread.value.posts[0]).text)
 
 const goToThread = () => {
   router.push({ name: 'Thread', params: { id: props.id } })
