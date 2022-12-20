@@ -23,7 +23,7 @@ export const findIn = (arr) => ({
    * @param {any} id Id to search by
    * @returns Element
    */
-  byId: (id) => arr.find(item => item.id === id),
+  byId: (id) => arr?.find(item => item.id === id),
 })
 
 /**

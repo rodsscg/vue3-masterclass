@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import { findIn } from '@/helpers'
-import store from '@/store'
+// import { findIn } from '@/helpers'
+// import store from '@/store'
 import NotFound from '@/views/NotFound.vue'
 import HomePage from '@/views/HomePage.vue'
 import ForumPage from '@/views/ForumPage.vue'
@@ -10,17 +10,17 @@ import ThreadCreate from '@/views/ThreadCreate.vue'
 import ThreadEdit from '@/views/ThreadEdit.vue'
 import ThreadShow from '@/views/ThreadShow.vue'
 
-const beforeEnterThread = (to, from, next) => {
-  const threadExists = findIn(store.state.threads).byId(to.params.id)
+// const beforeEnterThread = (to, from, next) => {
+//   const threadExists = findIn(store.state.threads).byId(to.params.id)
 
-  // The pathMatch is used to maintain the incorrect URL passed by the user
-  next(threadExists ? null : {
-    name: 'NotFound',
-    params: {
-      pathMatch: to.path.substring(1).split('/')
-    }
-  })
-}
+//   // The pathMatch is used to maintain the incorrect URL passed by the user
+//   next(threadExists ? null : {
+//     name: 'NotFound',
+//     params: {
+//       pathMatch: to.path.substring(1).split('/')
+//     }
+//   })
+// }
 
 const routes = [
   {
@@ -53,8 +53,8 @@ const routes = [
     path: '/thread/:id',
     name: 'Thread',
     component: ThreadShow,
-    props: true,
-    beforeEnter: beforeEnterThread
+    props: true
+    // beforeEnter: beforeEnterThread
   },
   {
     path: '/forum/:forumId/thread/create',

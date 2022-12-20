@@ -1,7 +1,6 @@
 import { createStore } from 'vuex'
 
-import sourceData from '@/assets/data.json'
-import { filterIn, findIn, findIndexIn, upsert } from '@/helpers'
+import { filterIn, findIn, upsert } from '@/helpers'
 
 const makeAppendChildToParentMutation = ({ parent, child }) => (state, { childId, parentId }) => {
   const resource = state[parent].find(item => item.id === parentId)
@@ -11,7 +10,11 @@ const makeAppendChildToParentMutation = ({ parent, child }) => (state, { childId
 
 export default createStore({
   state: {
-    ...sourceData,
+    categories: [],
+    forums: [],
+    threads: [],
+    posts: [],
+    users: [],
     authId: 'VXjpr2WHa8Ux4Bnggym8QFLdv5C3' //batman
   },
   getters: {
@@ -104,9 +107,8 @@ export default createStore({
     setPost(state, { post }) {
       upsert(state.posts, post)
     },
-    setUser(state, { user, userId }) {
-      const userIndex = findIndexIn(state.users).byId(userId)
-      state.users[userIndex] = user
+    setUser(state, { user }) {
+      upsert(state.users, user)
     },
     setThread(state, { thread }) {
       upsert(state.threads, thread)
