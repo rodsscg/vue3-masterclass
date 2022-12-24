@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 
 import { filterIn, findIn, upsert } from '@/helpers'
+import { queryDocById } from '@/services/firestore'
 
 const makeAppendChildToParentMutation = ({ parent, child }) => (state, { childId, parentId }) => {
   const resource = state[parent].find(item => item.id === parentId)
@@ -97,6 +98,39 @@ export default createStore({
     },
     updateUser({ commit }, user) {
       commit('setUser', { user, userId: user.id })
+    },
+    async fetchThread({ commit }, { id }) {
+      const threadSnap = await queryDocById('threads', id)
+      
+      if (!threadSnap.exists()) return null
+      
+      const thread = { ...threadSnap.data(), id: threadSnap.id }
+
+      commit('setThread', { thread })
+
+      return thread
+    },
+    async fetchUser({ commit }, { id }) {
+      const userSnap = await queryDocById('users', id)
+
+      if (!userSnap.exists()) return null
+
+      const user = { ...userSnap.data(), id: userSnap.id }
+
+      commit('setUser', { user })
+      
+      return user
+    },
+    async fetchPost({ commit }, { id }) {
+      const postSnap = await queryDocById('posts', id)
+
+      if (!postSnap.exists()) return null
+
+      const post = { ...postSnap.data(), id: postSnap.id }
+
+      commit('setPost', { post })
+      
+      return post
     }
   },
   mutations: {

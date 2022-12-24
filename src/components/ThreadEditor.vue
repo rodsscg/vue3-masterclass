@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps } from 'vue'
+import { defineEmits, defineProps, reactive } from 'vue'
 
 defineEmits(['reset', 'submit'])
 
@@ -60,5 +60,8 @@ const props = defineProps({
   }
 })
 
-const formData = { title: props.title, text: props.text }
+const formData = reactive({ 
+  title: props.title,
+  text: props.text
+})
 </script>
