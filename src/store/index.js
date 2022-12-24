@@ -70,17 +70,18 @@ export default createStore({
       post.userId = state.authId
       post.publishedAt = Math.floor(Date.now() / 1000)
 
-      commit('setPost', { post })
+      commit('setItem', { resource: 'posts', item: post })
       commit('appendPostToThread', { childId: post.id, parentId: post.threadId })
       commit('appendContributorToThread', { childId: post.userId, parentId: post.threadId })
     },
+
     async createThread({ commit, dispatch, state }, { text, title, forumId }) {
       const id = 'abc' + Math.random()
       const publishedAt = Math.floor(Date.now() / 1000)
       const userId = state.authId
       const thread = { id, forumId, publishedAt, title, userId }
 
-      commit('setThread', { thread })
+      commit('setItem', { resource: 'threads', item: thread })
       commit('appendThreadToForum', { childId: id, parentId: forumId })
       commit('appendThreadToUser', { childId: id, parentId: userId })
 
@@ -88,49 +89,42 @@ export default createStore({
 
       return findIn(state.threads).byId(id)
     },
+
     updateThread({ commit, state }, { title, text, id }) {
       const originalThread = findIn(state.threads).byId(id)
       const originalPost = findIn(state.posts).byId(originalThread.posts[0])
       const publishedAt = Math.floor(Date.now() / 1000)
 
-      commit('setThread', { thread: { ...originalThread, publishedAt, title } })
-      commit('setPost', { post: { ...originalPost, publishedAt, text } })
+      commit('setItem', { resource: 'threads', item: { ...originalThread, publishedAt, title } })
+      commit('setItem', { resource: 'posts', item: { ...originalPost, publishedAt, text } })
     },
+
     updateUser({ commit }, user) {
-      commit('setUser', { user, userId: user.id })
+      commit('setItem', { resource: 'users', item: user })
     },
-    async fetchThread({ commit }, { id }) {
-      const threadSnap = await queryDocById('threads', id)
-      
-      if (!threadSnap.exists()) return null
-      
-      const thread = { ...threadSnap.data(), id: threadSnap.id }
 
-      commit('setThread', { thread })
-
-      return thread
+    fetchThread({ dispatch }, { id }) {
+      return dispatch('fetchItem', { resource: 'threads', id })
     },
-    async fetchUser({ commit }, { id }) {
-      const userSnap = await queryDocById('users', id)
-
-      if (!userSnap.exists()) return null
-
-      const user = { ...userSnap.data(), id: userSnap.id }
-
-      commit('setUser', { user })
-      
-      return user
+    
+    fetchUser({ dispatch }, { id }) {
+      return dispatch('fetchItem', { resource: 'users', id })
     },
-    async fetchPost({ commit }, { id }) {
-      const postSnap = await queryDocById('posts', id)
 
-      if (!postSnap.exists()) return null
+    fetchPost({ dispatch }, { id }) {
+      return dispatch('fetchItem', { resource: 'posts', id })
+    },
 
-      const post = { ...postSnap.data(), id: postSnap.id }
+    async fetchItem({ commit }, { resource, id }) {
+      const resourceSnap = await queryDocById(resource, id)
 
-      commit('setPost', { post })
+      if (!resourceSnap.exists()) return null
+
+      const item = { ...resourceSnap.data(), id: resourceSnap.id }
+
+      commit('setItem', { resource, item })
       
-      return post
+      return item
     }
   },
   mutations: {
@@ -138,14 +132,6 @@ export default createStore({
     appendPostToThread: makeAppendChildToParentMutation({ parent: 'threads', child: 'posts' }),
     appendThreadToForum: makeAppendChildToParentMutation({ parent: 'forums', child: 'threads' }),
     appendThreadToUser: makeAppendChildToParentMutation({ parent: 'users', child: 'threads' }),
-    setPost(state, { post }) {
-      upsert(state.posts, post)
-    },
-    setUser(state, { user }) {
-      upsert(state.users, user)
-    },
-    setThread(state, { thread }) {
-      upsert(state.threads, thread)
-    }
+    setItem: (state, { resource, item }) => upsert(state[resource], item)
   }
 })
