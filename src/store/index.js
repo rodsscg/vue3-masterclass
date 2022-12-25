@@ -115,6 +115,18 @@ export default createStore({
       return dispatch('fetchItem', { resource: 'posts', id })
     },
 
+    fetchThreads({ dispatch }, { ids }) {
+      return dispatch('fetchItems', { resource: 'threads', ids })
+    },
+
+    fetchUsers({ dispatch }, { ids }) {
+      return dispatch('fetchItems', { resource: 'users', ids })
+    },
+
+    fetchPosts({ dispatch }, { ids }) {
+      return dispatch('fetchItems', { resource: 'posts', ids })
+    },
+
     async fetchItem({ commit }, { resource, id }) {
       const resourceSnap = await queryDocById(resource, id)
 
@@ -125,6 +137,10 @@ export default createStore({
       commit('setItem', { resource, item })
       
       return item
+    },
+
+    fetchItems({ dispatch }, { resource, ids }) {
+      return Promise.all(ids.map(id => dispatch('fetchItem', { resource, id })))
     }
   },
   mutations: {

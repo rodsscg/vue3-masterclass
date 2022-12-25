@@ -70,11 +70,11 @@ const getThreadData = () => dispatch('fetchThread', { id: props.id })
 
 const getUserData = (id) => dispatch('fetchUser', { id })
 
-const getThreadPosts = () => thread.value.posts.forEach(getPostData)
+const getThreadPosts = async () => {
+  const posts = await dispatch('fetchPosts', { ids: thread.value.posts })
+  const users = posts.map(post => post.userId)
 
-const getPostData = async (id) => {
-  const post = await dispatch('fetchPost', { id })
-  if (post) getUserData(post.userId)
+  dispatch('fetchUsers', { ids: users })
 }
 
 const onSavePost = (eventData) => {
