@@ -12,8 +12,18 @@ import { useStore } from 'vuex'
 
 import CategoryList from '@/components/CategoryList.vue'
 
-const store = useStore()
+const { state, dispatch } = useStore()
 
-const categories = computed(() => store.state.categories)
-const forums = computed(() => store.state.forums)
+const categories = computed(() => state.categories)
+const forums = computed(() => state.forums)
+
+const loadCategories = async () => {
+  const categories = await dispatch('fetchAllCategories')
+  const forumIds = categories.map(category => category.forums).flat()
+
+  dispatch('fetchForums', { ids: forumIds })
+}
+
+loadCategories()
+
 </script>

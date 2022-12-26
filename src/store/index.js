@@ -1,7 +1,7 @@
 import { createStore } from 'vuex'
 
 import { filterIn, findIn, upsert } from '@/helpers'
-import { queryDocById } from '@/services/firestore'
+import { getAllDocs, getDocById } from '@/services/firestore'
 
 const makeAppendChildToParentMutation = ({ parent, child }) => (state, { childId, parentId }) => {
   const resource = state[parent].find(item => item.id === parentId)
@@ -103,6 +103,16 @@ export default createStore({
       commit('setItem', { resource: 'users', item: user })
     },
 
+    async fetchAllCategories({ commit }) {
+      const docs = await getAllDocs('categories')
+
+      return docs.map(doc => {
+        const item = { id: doc.id, ...doc.data() }
+        commit('setItem', { resource: 'categories', item })
+        return item
+      })
+    },
+
     fetchThread({ dispatch }, { id }) {
       return dispatch('fetchItem', { resource: 'threads', id })
     },
@@ -113,6 +123,10 @@ export default createStore({
 
     fetchPost({ dispatch }, { id }) {
       return dispatch('fetchItem', { resource: 'posts', id })
+    },
+
+    fetchForums({ dispatch }, { ids }) {
+      return dispatch('fetchItems', { resource: 'forums', ids })
     },
 
     fetchThreads({ dispatch }, { ids }) {
@@ -128,7 +142,7 @@ export default createStore({
     },
 
     async fetchItem({ commit }, { resource, id }) {
-      const resourceSnap = await queryDocById(resource, id)
+      const resourceSnap = await getDocById(resource, id)
 
       if (!resourceSnap.exists()) return null
 

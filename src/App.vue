@@ -1,6 +1,6 @@
 <template>
   <the-navbar />
-  <div class="container push-top">
+  <div class="push-top">
     <router-view />
   </div>
 </template>
