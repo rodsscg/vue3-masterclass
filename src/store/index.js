@@ -5,8 +5,14 @@ import { getAllDocs, getDocById } from '@/services/firestore'
 
 const makeAppendChildToParentMutation = ({ parent, child }) => (state, { childId, parentId }) => {
   const resource = state[parent].find(item => item.id === parentId)
+  
+  if (!resource)
+    return console.warn(`Parent resource ${parent} with id ${parentId} not found.`)
+  
   resource[child] = resource[child] || []
-  if (!resource[child].includes(childId)) resource[child].push(childId)
+  
+  if (!resource[child].includes(childId))
+    resource[child].push(childId)
 }
 
 export default createStore({

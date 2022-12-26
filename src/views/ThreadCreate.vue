@@ -1,5 +1,8 @@
 <template>
-  <div class="col-full push-top">
+  <div
+    v-if="forum"
+    class="col-full push-top"
+  >
     <h1>Create new thread in <i>{{ forum.name }}</i></h1>
     <thread-editor
       @reset="onReset"
@@ -28,6 +31,10 @@ const props = defineProps({
 
 const forum = computed(() => findIn(state.forums).byId(props.forumId))
 
+const loadData = () => {
+  dispatch('fetchForum', { id: props.forumId })
+}
+
 const onReset = () => {
   router.push({ name: 'Forum', params: { id: props.forumId } })
 }
@@ -36,4 +43,6 @@ const onSubmit = async ({ title, text }) => {
   const thread = await dispatch('createThread', { title, text, forumId: props.forumId })
   router.push({ name: 'Thread', params: { id: thread.id } })
 }
+
+loadData()
 </script>

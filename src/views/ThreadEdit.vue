@@ -1,5 +1,8 @@
 <template>
-  <div class="col-full push-top">
+  <div
+    v-if="thread && text"
+    class="col-full push-top"
+  >
     <h1>Editing <i>{{ thread.title }}</i></h1>
     <thread-editor
       :title="thread.title"
@@ -29,7 +32,12 @@ const props = defineProps({
 })
 
 const thread = computed(() => findIn(state.threads).byId(props.id))
-const text = computed(() => findIn(state.posts).byId(thread.value.posts[0]).text)
+const text = computed(() => findIn(state.posts).byId(thread.value.posts[0])?.text ?? '')
+
+const loadData = async () => {
+  const loadedThread = await dispatch('fetchThread', { id: props.id })
+  dispatch('fetchPost', { id: loadedThread.posts[0] })
+}
 
 const goToThread = () => {
   router.push({ name: 'Thread', params: { id: props.id } })
@@ -43,4 +51,6 @@ const onSubmit = async ({ title, text }) => {
   dispatch('updateThread', { title, text, id: props.id })
   goToThread()
 }
+
+loadData()
 </script>
