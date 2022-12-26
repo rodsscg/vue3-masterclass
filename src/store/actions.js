@@ -6,11 +6,39 @@ export default {
   fetchThread: ({ dispatch }, { id }) => dispatch('fetchItem', { resource: 'threads', id }),
   fetchPost: ({ dispatch }, { id }) => dispatch('fetchItem', { resource: 'posts', id }),
   fetchUser: ({ dispatch }, { id }) => dispatch('fetchItem', { resource: 'users', id }),
+  fetchAuthUser: ({ dispatch, state }) => dispatch('fetchUser', { id: state.authId }),
+  
   fetchForums: ({ dispatch }, { ids }) => dispatch('fetchItems', { resource: 'forums', ids }),
   fetchThreads: ({ dispatch }, { ids }) => dispatch('fetchItems', { resource: 'threads', ids }),
   fetchPosts: ({ dispatch }, { ids }) => dispatch('fetchItems', { resource: 'posts', ids }),
   fetchUsers: ({ dispatch }, { ids }) => dispatch('fetchItems', { resource: 'users', ids }),
-  
+
+  async fetchAllCategories({ commit }) {
+    const docs = await getAllDocs('categories')
+
+    return docs.map(doc => {
+      const item = { id: doc.id, ...doc.data() }
+      commit('setItem', { resource: 'categories', item })
+      return item
+    })
+  },
+
+  async fetchItem({ commit }, { resource, id }) {
+    const resourceSnap = await getDocById(resource, id)
+
+    if (!resourceSnap.exists()) return null
+
+    const item = { ...resourceSnap.data(), id: resourceSnap.id }
+
+    commit('setItem', { resource, item })
+    
+    return item
+  },
+
+  fetchItems({ dispatch }, { resource, ids }) {
+    return Promise.all(ids.map(id => dispatch('fetchItem', { resource, id })))
+  },
+
   createPost({ commit, state }, post) {
     post.id = 'abc' + Math.random()
     post.userId = state.authId
@@ -47,31 +75,5 @@ export default {
 
   updateUser({ commit }, user) {
     commit('setItem', { resource: 'users', item: user })
-  },
-
-  async fetchAllCategories({ commit }) {
-    const docs = await getAllDocs('categories')
-
-    return docs.map(doc => {
-      const item = { id: doc.id, ...doc.data() }
-      commit('setItem', { resource: 'categories', item })
-      return item
-    })
-  },
-
-  async fetchItem({ commit }, { resource, id }) {
-    const resourceSnap = await getDocById(resource, id)
-
-    if (!resourceSnap.exists()) return null
-
-    const item = { ...resourceSnap.data(), id: resourceSnap.id }
-
-    commit('setItem', { resource, item })
-    
-    return item
-  },
-
-  fetchItems({ dispatch }, { resource, ids }) {
-    return Promise.all(ids.map(id => dispatch('fetchItem', { resource, id })))
   }
 }

@@ -6,7 +6,13 @@
 </template>
 
 <script setup>
-import TheNavbar from './components/TheNavbar.vue';
+import { useStore } from 'vuex'
+
+import TheNavbar from './components/TheNavbar.vue'
+
+const { dispatch } = useStore()
+
+dispatch('fetchAuthUser')
 </script>
 
 <style>
