@@ -47,7 +47,7 @@ export default createStore({
     thread(state) {
       return (id) => {
         const thread = findIn(state.threads).byId(id)
-        if (!thread) return null
+        if (!thread) return {}
 
         return {
           ...thread,
@@ -113,16 +113,20 @@ export default createStore({
       })
     },
 
+    fetchForum({ dispatch }, { id }) {
+      return dispatch('fetchItem', { resource: 'forums', id })
+    },
+
     fetchThread({ dispatch }, { id }) {
       return dispatch('fetchItem', { resource: 'threads', id })
-    },
-    
-    fetchUser({ dispatch }, { id }) {
-      return dispatch('fetchItem', { resource: 'users', id })
     },
 
     fetchPost({ dispatch }, { id }) {
       return dispatch('fetchItem', { resource: 'posts', id })
+    },
+    
+    fetchUser({ dispatch }, { id }) {
+      return dispatch('fetchItem', { resource: 'users', id })
     },
 
     fetchForums({ dispatch }, { ids }) {
@@ -133,12 +137,12 @@ export default createStore({
       return dispatch('fetchItems', { resource: 'threads', ids })
     },
 
-    fetchUsers({ dispatch }, { ids }) {
-      return dispatch('fetchItems', { resource: 'users', ids })
-    },
-
     fetchPosts({ dispatch }, { ids }) {
       return dispatch('fetchItems', { resource: 'posts', ids })
+    },
+
+    fetchUsers({ dispatch }, { ids }) {
+      return dispatch('fetchItems', { resource: 'users', ids })
     },
 
     async fetchItem({ commit }, { resource, id }) {

@@ -12,12 +12,15 @@
       >
         <div>
           <p>
-            <router-link :to="{ name: 'Thread', params: { id: thread.id } }">
+            <router-link
+              v-if="thread.id"
+              :to="{ name: 'Thread', params: { id: thread.id } }"
+            >
               {{ thread.title }}
             </router-link>
           </p>
           <p class="text-faded text-xsmall">
-            By <a href="#">{{ userById(thread.userId).name }}</a>,
+            By <a href="#">{{ userById(thread.userId)?.name }}</a>,
             <base-date :timestamp="thread.publishedAt" />.
           </p>
         </div>
@@ -28,14 +31,14 @@
           </p>
 
           <img
-            :src="userById(thread.userId).avatar"
+            :src="userById(thread.userId)?.avatar"
             class="avatar-medium"
             alt="user avatar"
           >
 
           <div>
             <p class="text-xsmall">
-              <a href="#">{{ userById(thread.userId).name }}</a>
+              <a href="#">{{ userById(thread.userId)?.name }}</a>
             </p>
             <base-date
               :timestamp="thread.publishedAt"
