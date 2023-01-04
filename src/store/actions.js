@@ -1,5 +1,13 @@
 import { findIn } from '@/helpers'
-import { arrayUnion, batch, getAllDocs, getDocById, getDocRef } from '@/services/firestore'
+import {
+  arrayUnion,
+  batch,
+  getAllDocs,
+  getDoc,
+  getDocById,
+  getDocRef,
+  serverTimestamp
+} from '@/services/firestore'
 
 export default {
   fetchForum: ({ dispatch }, { id }) => dispatch('fetchItem', { resource: 'forums', id }),
@@ -40,19 +48,21 @@ export default {
   },
 
   async createPost({ commit, state }, post) {
-    post.userId = state.authId
-    post.publishedAt = Math.floor(Date.now() / 1000)
-
     const postRef = getDocRef('posts')
     const threadRef = getDocRef('threads', post.threadId)
+
+    post.userId = state.authId
+    post.publishedAt = serverTimestamp()
 
     await batch()
       .set(postRef, post)
       .update(threadRef, { posts: arrayUnion(postRef.id), contributors: arrayUnion(post.userId) })
       .commit()
 
-    commit('setItem', { resource: 'posts', item: { ...post, id: postRef.id } })
-    commit('appendPostToThread', { childId: postRef.id, parentId: post.threadId })
+    const newPost = await getDoc(postRef)
+
+    commit('setItem', { resource: 'posts', item: { ...newPost.data(), id: newPost.id } })
+    commit('appendPostToThread', { childId: newPost.id, parentId: post.threadId })
     commit('appendContributorToThread', { childId: post.userId, parentId: post.threadId })
   },
 
