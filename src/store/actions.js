@@ -67,18 +67,30 @@ export default {
   },
 
   async createThread({ commit, dispatch, state }, { text, title, forumId }) {
-    const id = 'abc' + Math.random()
-    const publishedAt = Math.floor(Date.now() / 1000)
     const userId = state.authId
-    const thread = { id, forumId, publishedAt, title, userId }
 
-    commit('setItem', { resource: 'threads', item: thread })
-    commit('appendThreadToForum', { childId: id, parentId: forumId })
-    commit('appendThreadToUser', { childId: id, parentId: userId })
+    const threadRef = getDocRef('threads')
+    const forumRef = getDocRef('forums', forumId)
+    const userRef = getDocRef('users', userId)
 
-    await dispatch('createPost', { text, threadId: id })
+    const publishedAt = serverTimestamp()
+    const thread = { forumId, publishedAt, title, userId, id: threadRef.id }
 
-    return findIn(state.threads).byId(id)
+    await batch()
+      .set(threadRef, thread)
+      .update(forumRef, { threads: arrayUnion(threadRef.id) })
+      .update(userRef, { threads: arrayUnion(threadRef.id) })
+      .commit()
+
+    const newThread = await getDoc(threadRef)
+
+    commit('setItem', { resource: 'threads', item: { ...newThread.data(), id: newThread.id } })
+    commit('appendThreadToForum', { childId: threadRef.id, parentId: forumId })
+    commit('appendThreadToUser', { childId: threadRef.id, parentId: userId })
+
+    await dispatch('createPost', { text, threadId: threadRef.id })
+
+    return findIn(state.threads).byId(threadRef.id)
   },
 
   updateThread({ commit, state }, { title, text, id }) {
