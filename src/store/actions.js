@@ -1,5 +1,5 @@
 import { findIn } from '@/helpers'
-import { getAllDocs, getDocById } from '@/services/firestore'
+import { arrayUnion, batch, getAllDocs, getDocById, getDocRef } from '@/services/firestore'
 
 export default {
   fetchForum: ({ dispatch }, { id }) => dispatch('fetchItem', { resource: 'forums', id }),
@@ -39,13 +39,20 @@ export default {
     return Promise.all(ids.map(id => dispatch('fetchItem', { resource, id })))
   },
 
-  createPost({ commit, state }, post) {
-    post.id = 'abc' + Math.random()
+  async createPost({ commit, state }, post) {
     post.userId = state.authId
     post.publishedAt = Math.floor(Date.now() / 1000)
 
-    commit('setItem', { resource: 'posts', item: post })
-    commit('appendPostToThread', { childId: post.id, parentId: post.threadId })
+    const postRef = getDocRef('posts')
+    const threadRef = getDocRef('threads', post.threadId)
+
+    await batch()
+      .set(postRef, post)
+      .update(threadRef, { posts: arrayUnion(postRef.id), contributors: arrayUnion(post.userId) })
+      .commit()
+
+    commit('setItem', { resource: 'posts', item: { ...post, id: postRef.id } })
+    commit('appendPostToThread', { childId: postRef.id, parentId: post.threadId })
     commit('appendContributorToThread', { childId: post.userId, parentId: post.threadId })
   },
 
