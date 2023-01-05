@@ -1,4 +1,13 @@
 /**
+ * Document to resource helper
+ * @param {any} doc Document to convert or object
+ * @returns document converted to object
+ */
+export const docToResource = (doc) => {
+  return typeof doc?.data === 'function' ? { ...doc.data(), id: doc.id } : doc
+}
+
+/**
  * Filter array helpers
  * @param {Array} arr Array to search in
  * @returns filtered elements */

@@ -1,4 +1,4 @@
-import { findIn } from '@/helpers'
+import { docToResource, findIn } from '@/helpers'
 import {
   arrayUnion,
   batch,
@@ -96,13 +96,28 @@ export default {
     return findIn(state.threads).byId(threadRef.id)
   },
 
-  updateThread({ commit, state }, { title, text, id }) {
+  async updateThread({ commit, state }, { title, text, id }) {
     const originalThread = findIn(state.threads).byId(id)
     const originalPost = findIn(state.posts).byId(originalThread.posts[0])
-    const publishedAt = Math.floor(Date.now() / 1000)
 
-    commit('setItem', { resource: 'threads', item: { ...originalThread, publishedAt, title } })
-    commit('setItem', { resource: 'posts', item: { ...originalPost, publishedAt, text } })
+    const threadRef = getDocRef('threads', id)
+    const postRef = getDocRef('posts', originalPost.id)
+
+    let newThread = { ...originalThread, title }
+    let newPost = { ...originalPost, text }
+
+    await batch()
+      .update(threadRef, newThread)
+      .update(postRef, newPost)
+      .commit()
+
+    newThread = await getDoc(threadRef)
+    newPost = await getDoc(postRef)
+
+    commit('setItem', { resource: 'threads', item: newThread })
+    commit('setItem', { resource: 'posts', item: newPost })
+
+    return docToResource(newThread)
   },
 
   updateUser({ commit }, user) {

@@ -1,4 +1,4 @@
-import { findIn, upsert } from '@/helpers'
+import { docToResource, findIn, upsert } from '@/helpers'
 
 const makeAppendChildToParentMutation = ({ parent, child }) => (state, { childId, parentId }) => {
   const resource = findIn(state[parent]).byId(parentId)
@@ -17,5 +17,5 @@ export default {
   appendPostToThread: makeAppendChildToParentMutation({ parent: 'threads', child: 'posts' }),
   appendThreadToForum: makeAppendChildToParentMutation({ parent: 'forums', child: 'threads' }),
   appendThreadToUser: makeAppendChildToParentMutation({ parent: 'users', child: 'threads' }),
-  setItem: (state, { resource, item }) => upsert(state[resource], item)
+  setItem: (state, { resource, item }) => upsert(state[resource], docToResource(item))
 }
