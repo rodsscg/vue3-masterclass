@@ -27,4 +27,4 @@ export function batch() {
   return writeBatch(db)
 }
 
-export { arrayUnion, getDoc, serverTimestamp } from "firebase/firestore"
+export { arrayUnion, getDoc, increment, serverTimestamp } from "firebase/firestore"

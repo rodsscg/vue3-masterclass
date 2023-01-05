@@ -15,13 +15,13 @@ export default {
           return filterIn(state.posts).where('userId', user.id)
         },
         get postsCount() {
-          return this.posts.length
+          return user.postsCount ?? 0
         },
         get threads() {
           return filterIn(state.threads).where('userId', user.id)
         },
         get threadsCount() {
-          return this.threads.length
+          return user.threads?.length ?? 0
         }
       }
     }

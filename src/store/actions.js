@@ -6,6 +6,7 @@ import {
   getDoc,
   getDocById,
   getDocRef,
+  increment,
   serverTimestamp
 } from '@/services/firestore'
 
@@ -50,6 +51,7 @@ export default {
   async createPost({ commit, state }, post) {
     const postRef = getDocRef('posts')
     const threadRef = getDocRef('threads', post.threadId)
+    const userRef = getDocRef('users', state.authId)
 
     post.userId = state.authId
     post.publishedAt = serverTimestamp()
@@ -57,6 +59,7 @@ export default {
     await batch()
       .set(postRef, post)
       .update(threadRef, { posts: arrayUnion(postRef.id), contributors: arrayUnion(post.userId) })
+      .update(userRef, { postsCount: increment(1) })
       .commit()
 
     const newPost = await getDoc(postRef)
