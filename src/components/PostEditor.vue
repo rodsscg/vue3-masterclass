@@ -4,7 +4,7 @@
       <div class="form-group">
         <textarea
           id="post-text"
-          v-model="text"
+          v-model="postCopy.text"
           name=""
           cols="30"
           rows="10"
@@ -13,7 +13,7 @@
       </div>
       <div class="form-actions">
         <button class="btn-blue">
-          Submit post
+          {{ post.id ? 'Update Post' : 'Submit post' }}
         </button>
       </div>
     </form>
@@ -21,19 +21,22 @@
 </template>
 
 <script setup>
-import { defineEmits, ref } from 'vue'
+import { reactive } from 'vue'
 
 const emit = defineEmits(['save-post'])
 
-const text = ref('')
+const props = defineProps({
+  post: {
+    type: Object,
+    default: () => ({ text: null })
+  }
+})
+
+const postCopy = reactive({ ...props.post })
 
 const save = () => {
-  const post = {
-    text: text.value
-  }
-
-  emit('save-post', { post })
+  emit('save-post', { post: postCopy })
  
-  text.value = ''
+  postCopy.text.value = ''
 }
 </script>

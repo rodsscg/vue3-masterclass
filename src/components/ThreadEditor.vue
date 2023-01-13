@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps, reactive } from 'vue'
+import { reactive } from 'vue'
 
 defineEmits(['reset', 'submit'])
 

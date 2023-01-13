@@ -32,8 +32,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'	
-
 defineProps({
   forums: { type: Array, required: true }
 })

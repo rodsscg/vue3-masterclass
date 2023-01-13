@@ -111,8 +111,6 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps } from 'vue'
-
 const emit = defineEmits(['cancel-edit', 'save-user'])
 
 const props = defineProps({

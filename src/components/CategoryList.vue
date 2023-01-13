@@ -25,8 +25,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
-
 import { filterIn } from '@/helpers'
 import ForumList from '@/components/ForumList.vue'
 

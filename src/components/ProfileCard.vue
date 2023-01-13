@@ -56,8 +56,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
-
 defineProps({
   user: { type: Object, required: true },
   postsCount: { type: Number, required: true },

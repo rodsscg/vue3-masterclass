@@ -32,14 +32,21 @@
       </div>
 
       <div class="post-content">
-        <div>
-          <p>{{ post.text }}</p>
+        <div class="col-full">
+          <PostEditor
+            v-if="editing === post.id"
+            :post="post"
+          />
+          <p v-else>
+            {{ post.text }}
+          </p>
         </div>
         <a
           href="#"
           style="margin-left: auto; padding-left: 10px;"
           class="link-unstyled"
           title="Make a change"
+          @click.prevent="toggleEditMode(post.id)"
         >
           <font-awesome-icon icon="pencil-alt" />
         </a>
@@ -54,10 +61,11 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { ref } from 'vue'
 import { useStore } from 'vuex'
 
 import BaseDate from '@/components/BaseDate.vue'
+import PostEditor from '@/components/PostEditor.vue';
 
 const { getters } = useStore()
 
@@ -67,6 +75,11 @@ defineProps({
 })
 
 const userById = (userId) => getters.user(userId)
+const editing = ref('')
+
+const toggleEditMode = (postId) => {
+  editing.value = postId === editing.value ? '' : postId
+}
 </script>
 
 <style scoped>

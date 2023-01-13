@@ -52,8 +52,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
-
 import { findIn } from '@/helpers'
 import BaseDate from '@/components/BaseDate.vue';
 
